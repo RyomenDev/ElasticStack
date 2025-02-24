@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchUserProfile } from "../../api";
+import profileBg from "./profile-bg.png";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -37,26 +38,32 @@ const Profile = () => {
   }
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white shadow-lg rounded-lg mt-10">
-      <h2 className="text-2xl font-bold text-gray-800">Profile</h2>
-      {user ? (
-        <div className="mt-4">
-          <p className="text-gray-600">
-            <strong>Name:</strong> {user.name}
-          </p>
-          <p className="text-gray-600">
-            <strong>Email:</strong> {user.email}
-          </p>
-          <button
-            onClick={handleLogout}
-            className="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-          >
-            Logout
-          </button>
+    <div
+      className="h-screen flex items-center justify-center bg-cover bg-center"
+      style={{ backgroundImage: `url(${profileBg})` }}
+    >
+      <div className="bg-white/20 backdrop-blur-md shadow-xl rounded-lg p-8 max-w-lg w-full text-center border border-white/30">
+        {/* User Profile Image */}
+        <div className="w-24 h-24 mx-auto mb-4">
+          <img
+            src={`https://api.dicebear.com/6.x/adventurer/svg?seed=${
+              user?.name || "user"
+            }`} // Random avatar
+            alt="Profile"
+            className="rounded-full border-4 border-white shadow-md"
+          />
         </div>
-      ) : (
-        <p className="text-red-500">User not found</p>
-      )}
+
+        <h2 className="text-3xl font-bold text-slate-800">{user?.name}</h2>
+        <p className="text-slate-900">{user?.email}</p>
+
+        <button
+          onClick={handleLogout}
+          className="mt-6 px-6 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition"
+        >
+          Logout
+        </button>
+      </div>
     </div>
   );
 };
