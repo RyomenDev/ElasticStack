@@ -26,7 +26,8 @@ const client = new Client({
     password: "your_password_here",
   },
   tls: {
-    ca: fs.readFileSync("path_to_your_cert/http_ca.crt"), // Provide the certificate
+    // ca: fs.readFileSync("path_to_your_cert/http_ca.crt"), // Provide the certificate
+    ca: fs.readFileSync("./http_ca.crt"),//Ensure http_ca.crt is in your project folder.
     rejectUnauthorized: false, // Ignore SSL verification (only for local testing)
   },
 });
