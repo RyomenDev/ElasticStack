@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import esClient from "../db/index.js";
 import logger from "../logger/index.js";
+import { authenticateToken } from "../middlewares/authMiddleware.js";
 
 dotenv.config();
 const router = express.Router();
