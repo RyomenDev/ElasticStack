@@ -26,7 +26,7 @@ const Login = () => {
     try {
       const data = await loginUser(email, password);
       localStorage.setItem("token", data.token);
-      console.log({data});
+      //   console.log({data});
 
       dispatch(authLogin(data));
       setMessage("✅ Login successful");

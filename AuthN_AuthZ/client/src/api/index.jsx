@@ -1,3 +1,3 @@
-import { registerUser, loginUser } from "./authApi.jsx";
+import { registerUser, loginUser, fetchUserProfile } from "./authApi.jsx";
 
-export { registerUser, loginUser };
+export { registerUser, loginUser, fetchUserProfile };

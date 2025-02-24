@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { fetchUserProfile } from "../../api";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -16,10 +16,8 @@ const Profile = () => {
           return;
         }
 
-        const res = await axios.get("http://localhost:5000/api/auth/profile", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setUser(res.data);
+        const userData = await fetchUserProfile();
+        setUser(userData);
       } catch (error) {
         console.error("Error fetching profile:", error);
       } finally {

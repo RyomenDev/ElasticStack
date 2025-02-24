@@ -29,3 +29,19 @@ export const registerUser = async (name, email, password) => {
   }
 };
 
+export const fetchUserProfile = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      throw new Error("No authentication token found");
+    }
+    const response = await axios.get(`${API_BASE_URL}/auth/profile`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.error || "Failed to fetch profile";
+  }
+};
