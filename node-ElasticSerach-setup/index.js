@@ -2,6 +2,7 @@ import express from "express";
 import { Client } from "@elastic/elasticsearch";
 import dotenv from "dotenv";
 import cors from "cors";
+import fs from "fs";
 
 dotenv.config();
 
@@ -13,21 +14,32 @@ app.use(cors());
 
 // Elasticsearch Client Setup
 const esClient = new Client({
-  node: "http://localhost:9200",
-  auth: {
-    username: "elastic",
-    password: process.env.ELASTIC_PASSWORD,
-  },
+    node: "https://localhost:9200",
+    auth: {
+      username: "elastic",
+      password: process.env.ELASTIC_PASSWORD,
+    },
   tls: {
     ca: fs.readFileSync("./http_ca.crt"),
     rejectUnauthorized: false, // Ignore SSL verification (only for local testing)
   },
 });
 
-esClient
-  .ping()
-  .then(() => console.log("✅ Connected to Elasticsearch!"))
-  .catch((err) => console.error("❌ Connection error:", err));
+// esClient
+//   .ping()
+//   .then(() => console.log("✅ Connected to Elasticsearch!"))
+//   .catch((err) => console.error("❌ Connection error:", err));
+
+async function checkConnection() {
+  try {
+    const response = await esClient.ping();
+    console.log("✅ Elasticsearch Connected:", response);
+  } catch (error) {
+    console.error("❌ Connection error:", error);
+  }
+}
+
+checkConnection();
 
 // ✅ Check if Elasticsearch is Connected
 app.get("/es-status", async (req, res) => {
