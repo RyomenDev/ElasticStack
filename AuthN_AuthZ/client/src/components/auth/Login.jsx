@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { login as authLogin } from "../../store/authSlice";
 import {
   RiUser3Line,
   RiLock2Line,
@@ -15,6 +17,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -23,6 +26,7 @@ const Login = () => {
     try {
       const data = await loginUser(email, password);
       localStorage.setItem("token", data.token);
+      dispatch(authLogin(data.token));
       setMessage("✅ Login successful");
       setTimeout(() => navigate("/"), 1000); // Redirect after login
     } catch (error) {
