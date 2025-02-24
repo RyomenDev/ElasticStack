@@ -26,7 +26,9 @@ const Login = () => {
     try {
       const data = await loginUser(email, password);
       localStorage.setItem("token", data.token);
-      dispatch(authLogin(data.token));
+      console.log({data});
+
+      dispatch(authLogin(data));
       setMessage("✅ Login successful");
       setTimeout(() => navigate("/"), 1000); // Redirect after login
     } catch (error) {

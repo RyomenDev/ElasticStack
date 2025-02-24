@@ -8,7 +8,11 @@ const Header = () => {
   const navigate = useNavigate();
   const authStatus = useSelector((state) => state.auth.status);
   const userData = useSelector((state) => state.auth.userData);
-  const userName = userData?.name;
+  //   const userName = userData?.name;
+  const data = userData;
+  const userName = data?.name;
+  console.log({userName});
+  
 
   const [isContactLanguageOpen, setIsContactLanguageOpen] = useState(false); // State to toggle contact and language visibility
   const { topHeader } = HeaderData;

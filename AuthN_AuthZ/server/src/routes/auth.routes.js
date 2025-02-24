@@ -35,9 +35,11 @@ router.post("/register", async (req, res) => {
 // Login User
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
-  //   console.log({ email, password });
+  console.log({ email, password });
 
   const user = await findUserByEmail(email);
+  //   console.log(user);
+
   if (!user) {
     return res.status(400).json({ message: "Invalid credentials" });
   }
@@ -52,7 +54,7 @@ router.post("/login", async (req, res) => {
   });
   //   console.log({ token });
 
-  res.json({ token });
+  res.json({ token, name: user.name });
 });
 
 // Protected Route: Get User Profile
