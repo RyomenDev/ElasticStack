@@ -7,12 +7,13 @@ const Layout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State for sidebar visibility
 
   // Conditionally render the Header based on the current route
-  const showHeader = location.pathname !== "/login";
+  const showHeader =
+    location.pathname !== "/login" && location.pathname !== "/register";
 
   return (
     <>
       {/* Top Header */}
-      <TopHeader />
+      {showHeader && <TopHeader />}
 
       <div className="flex flex-col lg:flex-row h-screen">
         {/* Sidebar for Larger Screens */}
