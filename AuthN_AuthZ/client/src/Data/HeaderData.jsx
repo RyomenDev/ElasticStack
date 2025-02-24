@@ -29,7 +29,11 @@ const HeaderData = {
         name: "Logout",
         slug: "/logout",
         active: authStatus,
-        component: <button>Logout</button>, // Replace with your actual Logout button component
+        // component: (
+        //   <button className="">
+        //     Logout
+        //   </button>
+        // ), // Replace with your actual Logout button component
       },
     ],
   },
