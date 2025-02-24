@@ -1,4 +1,5 @@
 import { Client } from "@elastic/elasticsearch";
+import fs from "fs";
 import conf from "../conf/conf.js";
 
 const esClient = new Client({
@@ -9,6 +10,10 @@ const esClient = new Client({
         password: conf.ELASTICSEARCH_PASSWORD,
       }
     : undefined,
+  tls: {
+    ca: fs.readFileSync("./http_ca.crt"),
+    rejectUnauthorized: false, // Ignore SSL verification
+  },
 });
 
 export default esClient;
