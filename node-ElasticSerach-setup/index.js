@@ -20,6 +20,11 @@ const esClient = new Client({
   },
 });
 
+esClient
+  .ping()
+  .then(() => console.log("✅ Connected to Elasticsearch!"))
+  .catch((err) => console.error("❌ Connection error:", err));
+
 // ✅ Check if Elasticsearch is Connected
 app.get("/es-status", async (req, res) => {
   try {
