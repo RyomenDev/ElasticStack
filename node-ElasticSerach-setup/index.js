@@ -18,6 +18,10 @@ const esClient = new Client({
     username: "elastic",
     password: process.env.ELASTIC_PASSWORD,
   },
+  tls: {
+    ca: fs.readFileSync("./http_ca.crt"),
+    rejectUnauthorized: false, // Ignore SSL verification (only for local testing)
+  },
 });
 
 esClient
