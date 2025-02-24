@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import {
   RiUser3Line,
@@ -6,7 +5,7 @@ import {
   RiEyeOffLine,
   RiEyeLine,
 } from "react-icons/ri";
-import bgImage from "./login-bg.png";
+import bgImage from "./auth-bg.png";
 import { loginUser } from "../../api";
 import { useNavigate } from "react-router-dom";
 
