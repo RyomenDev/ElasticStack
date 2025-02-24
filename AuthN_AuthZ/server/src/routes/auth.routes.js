@@ -2,62 +2,51 @@
 import express from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
-import esClient from "../db/index.js";
+import { addUser, findUserByEmail } from "../models/user.model.js";
 import logger from "../logger/index.js";
 import { authenticateToken } from "../middlewares/authMiddleware.js";
+import conf from "../conf/conf.js";
 
-dotenv.config();
 const router = express.Router();
-const JWT_SECRET = process.env.JWT_SECRET || "your_secret_key";
+const JWT_SECRET = conf.JWT_SECRET;
 
 // Register User
 router.post("/register", async (req, res) => {
   const { name, email, password } = req.body;
-  const hashedPassword = await bcrypt.hash(password, 10);
 
-  try {
-    await esClient.index({
-      index: "users",
-      document: { name, email, password: hashedPassword },
-    });
-
-    logger.info(`User registered: ${email}`);
-    res.json({ message: "User registered successfully" });
-  } catch (error) {
-    logger.error(error.message);
-    res.status(500).json({ error: "Server Error" });
+  if (!name || !email || !password) {
+    return res.status(400).json({ message: "All fields are required" });
   }
+
+  const existingUser = await findUserByEmail(email);
+  if (existingUser) {
+    return res.status(400).json({ message: "User already exists" });
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+  await addUser({ name, email, password: hashedPassword });
+
+  res.status(201).json({ message: "User registered successfully" });
 });
 
 // Login User
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
-  try {
-    const result = await esClient.search({
-      index: "users",
-      query: { match: { email } },
-    });
-
-    if (result.hits.hits.length === 0) {
-      return res.status(401).json({ error: "Invalid credentials" });
-    }
-
-    const user = result.hits.hits[0]._source;
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(401).json({ error: "Invalid credentials" });
-
-    const token = jwt.sign({ email: user.email }, JWT_SECRET, {
-      expiresIn: "1h",
-    });
-
-    logger.info(`User logged in: ${email}`);
-    res.json({ token });
-  } catch (error) {
-    logger.error(error.message);
-    res.status(500).json({ error: "Server Error" });
+  const user = await findUserByEmail(email);
+  if (!user) {
+    return res.status(400).json({ message: "Invalid credentials" });
   }
+
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) {
+    return res.status(400).json({ message: "Invalid credentials" });
+  }
+
+  const token = jwt.sign({ email: user.email }, conf.JWT_SECRET, {
+    expiresIn: "1h",
+  });
+  res.json({ token });
 });
 
 // Protected Route: Get User Profile
