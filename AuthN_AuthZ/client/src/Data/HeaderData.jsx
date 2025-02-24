@@ -26,9 +26,9 @@ const HeaderData = {
       { name: "Support", slug: "#", active: true },
       { name: "Login", slug: "/login", active: !authStatus },
       {
-        name: "Logout",
-        slug: "/logout",
-        active: authStatus,
+        // name: "Logout",
+        // slug: "/logout",
+        // active: authStatus,
         // component: (
         //   <button className="">
         //     Logout
