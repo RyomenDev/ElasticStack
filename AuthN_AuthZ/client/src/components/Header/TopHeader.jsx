@@ -23,7 +23,7 @@ const Header = () => {
   };
 
   return (
-    <header className="sticky top-0 left-0 w-full z-50 flex flex-wrap justify-between items-center py-6 px-6 bg-gradient-to-b from-slate-900 to-slate-400 text-white shadow-lg border-b-4 border-slate-300">
+    <header className="sticky top-0 left-0 w-full z-50 flex flex-wrap justify-between items-center py-6 px-6 bg-gradient-to-b from-slate-900 to-slate-400 text-white shadow-lg border-b-4 border-slate-300 pl-12">
       {/* Logo Section */}
       <div
         className="flex items-center justify-start cursor-pointer gap-2 hover:shadow-lg rounded-lg transition-all duration-300"
