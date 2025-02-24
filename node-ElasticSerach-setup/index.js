@@ -16,7 +16,7 @@ const esClient = new Client({
   node: "http://localhost:9200",
   auth: {
     username: "elastic",
-    password: "your_elastic_password",
+    password: process.env.ELASTIC_PASSWORD,
   },
 });
 
