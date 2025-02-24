@@ -26,7 +26,7 @@ const SideHeader = () => {
     <header className="flex flex-col h-screen p-4 bg-gray-100 shadow-lg">
       {/* Navigation Links */}
       <ul className="flex flex-col space-y-2">
-        {sideHeader.navItems.map(
+        {sideHeader.navItems(authStatus).map(
           (item) =>
             item.active && (
               <li key={item.name}>

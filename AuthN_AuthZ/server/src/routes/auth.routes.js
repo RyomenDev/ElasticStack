@@ -6,6 +6,7 @@ import { addUser, findUserByEmail } from "../models/user.model.js";
 import logger from "../logger/index.js";
 import { authenticateToken } from "../middlewares/authMiddleware.js";
 import conf from "../conf/conf.js";
+import esClient from "../db/elasticsearch.js";
 
 const router = express.Router();
 const JWT_SECRET = conf.JWT_SECRET;
@@ -35,7 +36,7 @@ router.post("/register", async (req, res) => {
 // Login User
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
-  console.log({ email, password });
+  //   console.log({ email, password });
 
   const user = await findUserByEmail(email);
   //   console.log(user);
@@ -59,6 +60,8 @@ router.post("/login", async (req, res) => {
 
 // Protected Route: Get User Profile
 router.get("/profile", authenticateToken, async (req, res) => {
+  //   console.log(req.user);
+
   try {
     const result = await esClient.search({
       index: "users",

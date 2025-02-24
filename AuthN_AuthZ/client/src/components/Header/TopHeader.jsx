@@ -11,8 +11,7 @@ const Header = () => {
   //   const userName = userData?.name;
   const data = userData;
   const userName = data?.name;
-  console.log({userName});
-  
+  //   console.log({userName});
 
   const [isContactLanguageOpen, setIsContactLanguageOpen] = useState(false); // State to toggle contact and language visibility
   const { topHeader } = HeaderData;

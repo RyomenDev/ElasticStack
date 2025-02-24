@@ -15,7 +15,8 @@ const HeaderData = {
   //
 
   sideHeader: {
-    navItems: [
+    navItems: (authStatus) => [
+      { name: "Profile", slug: "/profile", active: authStatus },
       { name: "Home", slug: "/", active: true },
       { name: "Learn More", slug: "#", active: true },
       { name: "About", slug: "#", active: true },
