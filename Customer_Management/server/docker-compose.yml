@@ -1,26 +1,31 @@
-version: "3.8"
+# docker-compose up --build -d
+version: '3.8'
+#
 
 services:
   backend:
-    build: .
-    container_name: node_backend
+    build: ./backend
+    container_name: customer_management_backend
     ports:
       - "5000:5000"
     environment:
       - PORT=5000
-      - JWT_SECRET="6aad3e1036582790"
-      - ELASTICSEARCH_URL="http://localhost:9200/"
-      - ELASTICSEARCH_USERNAME="elastic" 
-      - ELASTICSEARCH_PASSWORD="G4M5vD8pMAG+c1Au_wS2"
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
     depends_on:
       - elasticsearch
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.2
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.5.3
     container_name: elasticsearch
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
     ports:
-      - "5601:5601"
-      # - "9200:9200"
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+
+volumes:
+  esdata:
+    driver: local

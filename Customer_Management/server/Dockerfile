@@ -1,21 +1,20 @@
-# docker-compose up --build
-
-
-# Use Node.js official image
+# Use official Node.js image
 FROM node:18
 
 # Set working directory
 WORKDIR /app
 
-# Copy package.json and install dependencies
-COPY package.json .
+# Copy package.json and package-lock.json
+COPY package*.json ./
+
+# Install dependencies
 RUN npm install
 
-# Copy application code
+# Copy rest of the application
 COPY . .
 
-# Expose port
+# Expose the application port
 EXPOSE 5000
 
-# Start application
+# Start the application
 CMD ["node", "server.js"]
