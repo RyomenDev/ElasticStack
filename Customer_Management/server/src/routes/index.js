@@ -4,7 +4,7 @@ const router = express.Router();
 import authRoutes from "./auth.routes.js";
 router.use("/auth", authRoutes);
 
-const customerRoutes = require("./customer.routes.js");
-app.use("/customers", customerRoutes);
+import customerRoutes from "./customer.routes.js";
+router.use("/customers", customerRoutes);
 
 export default router;

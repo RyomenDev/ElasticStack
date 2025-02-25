@@ -1,10 +1,10 @@
-const fs = require("fs");
-const xlsx = require("xlsx");
-const { esClient } = require("../config/elasticSearch");
-const { sendNotification } = require("../utils/socket");
+import fs from "fs";
+import xlsx from "xlsx";
+import esClient from "../db/elasticSearch.js";
+import { sendNotification } from "../utils/socket.js";
 
 // Create a new customer
-exports.createCustomer = async (req, res) => {
+export const createCustomer = async (req, res) => {
   try {
     const {
       name,
@@ -34,7 +34,7 @@ exports.createCustomer = async (req, res) => {
 };
 
 // Get all customers
-exports.getCustomers = async (req, res) => {
+export const getCustomers = async (req, res) => {
   try {
     const { body } = await esClient.search({
       index: "customers",
@@ -53,7 +53,7 @@ exports.getCustomers = async (req, res) => {
 };
 
 // Update a customer
-exports.updateCustomer = async (req, res) => {
+export const updateCustomer = async (req, res) => {
   try {
     const { id } = req.params;
     const {
@@ -85,7 +85,7 @@ exports.updateCustomer = async (req, res) => {
 };
 
 // Delete a customer
-exports.deleteCustomer = async (req, res) => {
+export const deleteCustomer = async (req, res) => {
   try {
     const { id } = req.params;
     await esClient.delete({ index: "customers", id });
@@ -97,7 +97,7 @@ exports.deleteCustomer = async (req, res) => {
 };
 
 // Bulk Upload Customers via Excel
-exports.bulkUpload = async (req, res) => {
+export const bulkUpload = async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ message: "No file uploaded" });
 

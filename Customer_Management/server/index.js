@@ -1,6 +1,6 @@
 import { app } from "./src/app.js";
 import conf from "./src/conf/conf.js";
-const { esClient } = require("./config/elasticSearch");
+import esClient from "./src/db/elasticsearch.js";
 
 // Start Server
 const PORT = conf.PORT || 5000;

@@ -1,9 +1,11 @@
-const socketIO = require("socket.io");
+// const socketIO = require("socket.io");
+import { Server } from "socket.io";
+
 
 let io;
 
-exports.initSocket = (server) => {
-  io = socketIO(server, { cors: { origin: "*" } });
+export const initSocket = (server) => {
+  io = new Server(server, { cors: { origin: "*" } });
 
   io.on("connection", (socket) => {
     console.log("Client connected");
@@ -11,6 +13,6 @@ exports.initSocket = (server) => {
   });
 };
 
-exports.sendNotification = (message, data) => {
+export const sendNotification = (message, data) => {
   if (io) io.emit("notification", { message, data });
 };
