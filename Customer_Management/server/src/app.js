@@ -4,9 +4,15 @@ import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 import conf from "./conf/conf.js";
 import esClient from "./db/elasticsearch.js";
+const morgan = require("morgan");
+const http = require("http");
+const { initSocket } = require("./utils/socket");
 
 const app = express();
 app.use(bodyParser.json());
+app.use(morgan("dev"));
+const server = http.createServer(app);
+initSocket(server); // Initialize WebSocket
 
 // app.use(
 //   cors({
