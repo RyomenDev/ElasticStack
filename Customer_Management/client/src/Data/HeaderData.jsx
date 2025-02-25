@@ -18,6 +18,7 @@ const HeaderData = {
     navItems: (authStatus) => [
       { name: "Profile", slug: "/profile", active: authStatus },
       { name: "Home", slug: "/", active: true },
+      { name: "Customers", slug: "/customer-records", active: true },
       { name: "Learn More", slug: "#", active: true },
       { name: "About", slug: "#", active: true },
       { name: "How to Use", slug: "#", active: true },

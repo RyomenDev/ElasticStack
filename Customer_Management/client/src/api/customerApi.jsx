@@ -38,7 +38,7 @@ export const updateCustomer = async (customerId, updatedData) => {
       `${conf.server_url}/customers/${customerId}`,
       updatedData
     );
-    console.log({ response });
+    // console.log({ response });
     
     return response.data;
   } catch (error) {
