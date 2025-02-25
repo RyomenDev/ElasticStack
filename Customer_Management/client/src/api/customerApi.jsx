@@ -19,6 +19,33 @@ export const fetchCustomers = async () => {
   return response.data;
 };
 
+// Delete a customer
+export const deleteCustomer = async (customerId) => {
+  try {
+    const response = await axios.delete(
+      `${conf.server_url}/customers/${customerId}`
+    );
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { message: "Failed to delete customer" };
+  }
+};
+
+// update a customer
+export const updateCustomer = async (customerId, updatedData) => {
+  try {
+    const response = await axios.put(
+      `${conf.server_url}/customers/${customerId}`,
+      updatedData
+    );
+    console.log({ response });
+    
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { message: "Failed to update customer" };
+  }
+};
+
 // Upload customers via Excel
 export const uploadCustomers = async (formData) => {
   const response = await axios.post(
