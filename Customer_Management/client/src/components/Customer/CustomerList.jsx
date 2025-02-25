@@ -203,7 +203,7 @@ const CustomerList = () => {
                 }
                 className="w-full p-2 border rounded mb-2"
               />
-              <input
+              <select
                 type="text"
                 placeholder="Payment Status"
                 value={formData.paymentStatus}
@@ -211,7 +211,10 @@ const CustomerList = () => {
                   setFormData({ ...formData, paymentStatus: e.target.value })
                 }
                 className="w-full p-2 border rounded mb-2"
-              />
+              >
+                <option value="Pending">Pending</option>
+                <option value="Completed">Completed</option>
+              </select>
               <button
                 type="submit"
                 className="bg-blue-500 text-white px-4 py-2 rounded mr-2"
