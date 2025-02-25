@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { uploadCustomers } from "../api";
+import { uploadCustomers } from "../../api/customerApi";
 import { toast } from "react-toastify";
 import * as XLSX from "xlsx";
 

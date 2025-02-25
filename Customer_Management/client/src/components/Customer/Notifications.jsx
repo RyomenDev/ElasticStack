@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { fetchNotifications } from "../api";
+import { fetchNotifications } from "../../api/customerApi";
 
 const Notifications = () => {
   const [notifications, setNotifications] = useState([]);

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { fetchCustomers, updatePaymentStatus } from "../api";
+import { fetchCustomers, updatePaymentStatus } from "../../api/customerApi";
 import { toast } from "react-toastify";
 
 const CustomerList = () => {

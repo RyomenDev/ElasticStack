@@ -1,6 +1,7 @@
 import axios from "axios";
+import conf from "../conf/conf.js";
 
-const API_BASE_URL = "http://localhost:5000"; // Backend URL
+const API_BASE_URL = conf.server_url;
 
 // Fetch all customers
 export const fetchCustomers = async () => {

@@ -1,6 +1,6 @@
-import CustomerList from "./components/CustomerList";
-import UploadCustomers from "./components/UploadCustomers";
-import Notifications from "./components/Notifications";
+import CustomerList from "./components/Customer/CustomerList";
+import UploadCustomers from "./components/Customer/UploadCustomers";
+import Notifications from "./components/Customer/Notifications";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 
