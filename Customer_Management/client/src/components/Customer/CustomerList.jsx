@@ -1,12 +1,32 @@
 import { useState, useEffect } from "react";
 import { fetchCustomers, updatePaymentStatus } from "../../api/customerApi";
 import { toast } from "react-toastify";
+import { io } from "socket.io-client";
+
+import conf from "../../conf/conf.js";
+const socket = io(conf.server_url);
 
 const CustomerList = () => {
   const [customers, setCustomers] = useState([]);
 
   useEffect(() => {
     loadCustomers();
+
+    // Listen for real-time payment updates
+    socket.on("paymentUpdated", ({ customerId, status }) => {
+      setCustomers((prevCustomers) =>
+        prevCustomers.map((customer) =>
+          customer.id === customerId
+            ? { ...customer, paymentStatus: status } // Update only the changed customer
+            : customer
+        )
+      );
+      toast.info(`Payment status updated for Customer ID: ${customerId}`);
+    });
+
+    return () => {
+      socket.off("paymentUpdated"); // Cleanup listener on component unmount
+    };
   }, []);
 
   const loadCustomers = async () => {
@@ -14,10 +34,32 @@ const CustomerList = () => {
     setCustomers(data);
   };
 
-  const handlePaymentUpdate = async (id, status) => {
-    // await updatePaymentStatus(id, status);
-    // toast.success("Payment status updated!");
-    // loadCustomers();
+  const handlePaymentUpdate = async (id, currentStatus) => {
+    const newStatus = currentStatus === "Paid" ? "Unpaid" : "Paid";
+
+    // Optimistically update UI before API response
+    setCustomers((prevCustomers) =>
+      prevCustomers.map((customer) =>
+        customer.id === id
+          ? { ...customer, paymentStatus: newStatus }
+          : customer
+      )
+    );
+
+    try {
+      await updatePaymentStatus(id, newStatus);
+      toast.success(`Payment status updated to ${newStatus}!`);
+    } catch (error) {
+      toast.error("Failed to update payment status.");
+      // Revert UI state in case of failure
+      setCustomers((prevCustomers) =>
+        prevCustomers.map((customer) =>
+          customer.id === id
+            ? { ...customer, paymentStatus: currentStatus }
+            : customer
+        )
+      );
+    }
   };
 
   return (
@@ -42,10 +84,18 @@ const CustomerList = () => {
               <td className="p-2">{customer.paymentStatus}</td>
               <td className="p-2">
                 <button
-                  onClick={() => handlePaymentUpdate(customer.id, "Paid")}
-                  className="bg-green-500 text-white px-3 py-1 rounded"
+                  onClick={() =>
+                    handlePaymentUpdate(customer.id, customer.paymentStatus)
+                  }
+                  className={`px-3 py-1 rounded ${
+                    customer.paymentStatus === "Paid"
+                      ? "bg-red-500 text-white"
+                      : "bg-green-500 text-white"
+                  }`}
                 >
-                  Mark Paid
+                  {customer.paymentStatus === "Paid"
+                    ? "Mark Unpaid"
+                    : "Mark Paid"}
                 </button>
               </td>
             </tr>

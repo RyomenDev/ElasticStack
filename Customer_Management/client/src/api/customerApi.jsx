@@ -33,6 +33,8 @@ export const uploadCustomers = async (formData) => {
 
 // Mark payment as completed
 export const updatePaymentStatus = async (customerId, status) => {
+  //   console.log({ customerId, status });
+
   await axios.put(`${API_BASE_URL}/customers/${customerId}/payment`, {
     status,
   });

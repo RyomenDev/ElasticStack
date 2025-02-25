@@ -2,7 +2,8 @@ import fs from "fs";
 import xlsx from "xlsx";
 import esClient from "../db/elasticSearch.js";
 import { sendNotification } from "../utils/socket.js";
-import { Customer } from "../models/customer.model.js"; // Import customer model
+import { Customer } from "../models/customer.model.js";
+import { emitEvent } from "../utils/socket.js";
 
 // Function to check if 'customers' index exists, and create if not
 const ensureIndexExists = async () => {
@@ -123,25 +124,74 @@ export const getCustomers = async (req, res) => {
   }
 };
 
-// Update a customer
-export const updateCustomer = async (req, res) => {
+// Update Payment Status Controller
+export const updatePaymentStatus = async (req, res) => {
+  //   console.log("updatePaymentStatus");
+
+  const { customerId } = req.params;
+  const { status } = req.body;
+
+  //   console.log(
+  //     `Updating payment status for customer ${customerId} to ${status}`
+  //   );
+
   try {
-    await ensureIndexExists(); // Ensure index exists before updating
+    // Ensure the index exists before updating
+    await ensureIndexExists();
 
-    const { id } = req.params;
-    const { error } = Customer.validate(req.body);
-    if (error) return res.status(400).json({ error: error.details[0].message });
-
-    const response = await esClient.update({
+    // Check if customer exists
+    const customer = await esClient.get({
       index: "customers",
-      id,
-      body: { doc: req.body },
+      id: customerId,
     });
 
-    res.json({ id, updated: response.body.result === "updated" });
+    // console.log("Customer", customer);
+
+    if (!customer.found) {
+      return res.status(404).json({ error: "Customer not found" });
+    }
+
+    // Update customer payment status
+    const response = await esClient.update({
+      index: "customers",
+      id: customerId,
+      body: {
+        doc: { paymentStatus: status },
+      },
+    });
+
+    // Emit real-time update to frontend
+    emitEvent("paymentUpdated", { customerId, status });
+
+    // console.log("Payment status updated successfully:", response);
+    res.json({ message: "Payment status updated successfully" });
   } catch (error) {
+    console.error("Error updating payment status:", error);
     res.status(500).json({ error: error.message });
   }
+};
+
+// Update a customer
+export const updateCustomer = async (req, res) => {
+  console.log("updateCustomer", req.body);
+
+  //   try {
+  //     await ensureIndexExists(); // Ensure index exists before updating
+
+  //     const { id } = req.params;
+  //     const { error } = Customer.validate(req.body);
+  //     if (error) return res.status(400).json({ error: error.details[0].message });
+
+  //     const response = await esClient.update({
+  //       index: "customers",
+  //       id,
+  //       body: { doc: req.body },
+  //     });
+
+  //     res.json({ id, updated: response.body.result === "updated" });
+  //   } catch (error) {
+  //     res.status(500).json({ error: error.message });
+  //   }
 };
 
 // Delete a customer

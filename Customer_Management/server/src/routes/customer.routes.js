@@ -6,6 +6,7 @@ import {
   updateCustomer,
   deleteCustomer,
   bulkUpload,
+  updatePaymentStatus,
 } from "../controllers/customer.controller.js";
 
 const router = express.Router();
@@ -16,6 +17,7 @@ router.get("/", getCustomers);
 router.put("/:id", updateCustomer);
 router.delete("/:id", deleteCustomer);
 router.post("/bulk-upload", upload.single("file"), bulkUpload);
+router.put("/:customerId/payment", updatePaymentStatus);
 
 // module.exports = router;
 export default router;
