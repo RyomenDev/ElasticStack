@@ -72,6 +72,7 @@ const CustomerList = () => {
             <th className="p-2">Contact</th>
             <th className="p-2">Due Amount</th>
             <th className="p-2">Payment Status</th>
+            <th className="p-2">Payment DueDate</th>
             <th className="p-2">Actions</th>
           </tr>
         </thead>
@@ -79,9 +80,10 @@ const CustomerList = () => {
           {customers.map((customer) => (
             <tr key={customer.id} className="border-b">
               <td className="p-2">{customer.name}</td>
-              <td className="p-2">{customer.contact}</td>
-              <td className="p-2">${customer.dueAmount}</td>
+              <td className="p-2">{customer.contactInfo}</td>
+              <td className="p-2">${customer.outstandingAmount}</td>
               <td className="p-2">{customer.paymentStatus}</td>
+              <td className="p-2">{customer.paymentDueDate}</td>
               <td className="p-2">
                 <button
                   onClick={() =>

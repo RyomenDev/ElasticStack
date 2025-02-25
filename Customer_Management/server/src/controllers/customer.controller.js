@@ -209,36 +209,89 @@ export const deleteCustomer = async (req, res) => {
 };
 
 // Bulk Upload Customers via Excel
-export const bulkUpload = async (req, res) => {
-  try {
-    await ensureIndexExists(); // Ensure index exists before bulk upload
+// export const bulkUpload = async (req, res) => {
+//   console.log("bulkUpload-file", req.file);
+//   console.log("bulkUpload-formData", req.formData);
+//   console.log("bulkUpload", req.body);
 
+//   try {
+//     await ensureIndexExists(); // Ensure index exists before bulk upload
+
+//     if (!req.file) return res.status(400).json({ message: "No file uploaded" });
+
+//     const filePath = req.file.path;
+//     const workbook = xlsx.readFile(filePath);
+//     const sheetName = workbook.SheetNames[0];
+//     const data = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
+
+//     // Validate data before insertion
+//     const validatedData = [];
+//     for (const entry of data) {
+//       const { error } = Customer.validate(entry);
+//       if (!error) validatedData.push(entry);
+//     }
+
+//     if (validatedData.length === 0) {
+//       fs.unlinkSync(filePath);
+//       return res
+//         .status(400)
+//         .json({ message: "No valid records found in the file." });
+//     }
+
+//     const bulkOps = validatedData.flatMap((doc) => [
+//       { index: { _index: "customers" } },
+//       doc,
+//     ]);
+//     const { body } = await esClient.bulk({ refresh: true, body: bulkOps });
+
+//     fs.unlinkSync(filePath); // Delete file after processing
+
+//     sendNotification("Bulk customers uploaded", { count: body.items.length });
+//     res.json({
+//       message: "Bulk upload successful",
+//       totalUploaded: body.items.length,
+//     });
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// };
+export const bulkUpload = async (req, res) => {
+    console.log("Hii");
+    
+  try {
+    console.log("Received file:", req.file);
     if (!req.file) return res.status(400).json({ message: "No file uploaded" });
 
     const filePath = req.file.path;
+    console.log("Processing file:", filePath);
+
+    // Read Excel file
     const workbook = xlsx.readFile(filePath);
     const sheetName = workbook.SheetNames[0];
     const data = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
+    console.log("Extracted Data:", data);
 
-    // Validate data before insertion
-    const validatedData = [];
-    for (const entry of data) {
-      const { error } = Customer.validate(entry);
-      if (!error) validatedData.push(entry);
-    }
-
-    if (validatedData.length === 0) {
+    if (!data.length) {
       fs.unlinkSync(filePath);
       return res
         .status(400)
-        .json({ message: "No valid records found in the file." });
+        .json({ message: "Empty file or no valid records." });
     }
 
-    const bulkOps = validatedData.flatMap((doc) => [
+    // Ensure Elasticsearch index exists
+    await ensureIndexExists();
+
+    // Validate and prepare data for Elasticsearch bulk upload
+    const bulkOps = data.flatMap((entry) => [
       { index: { _index: "customers" } },
-      doc,
+      entry,
     ]);
+
+    console.log("Bulk Operations Prepared:", bulkOps.length);
+
+    // Perform Elasticsearch bulk operation
     const { body } = await esClient.bulk({ refresh: true, body: bulkOps });
+    console.log("Elasticsearch Response:", body);
 
     fs.unlinkSync(filePath); // Delete file after processing
 
@@ -248,6 +301,7 @@ export const bulkUpload = async (req, res) => {
       totalUploaded: body.items.length,
     });
   } catch (error) {
+    console.error("Bulk upload error:", error.message);
     res.status(500).json({ error: error.message });
   }
 };
