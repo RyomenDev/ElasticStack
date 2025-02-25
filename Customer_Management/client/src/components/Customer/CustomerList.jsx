@@ -15,9 +15,9 @@ const CustomerList = () => {
   };
 
   const handlePaymentUpdate = async (id, status) => {
-    await updatePaymentStatus(id, status);
-    toast.success("Payment status updated!");
-    loadCustomers();
+    // await updatePaymentStatus(id, status);
+    // toast.success("Payment status updated!");
+    // loadCustomers();
   };
 
   return (

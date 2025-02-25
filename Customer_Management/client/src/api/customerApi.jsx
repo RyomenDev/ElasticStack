@@ -1,7 +1,17 @@
 import axios from "axios";
 import conf from "../conf/conf.js";
-
 const API_BASE_URL = conf.server_url;
+
+// CREATE A CUSTOMER
+export const createCustomer = async (customer) => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/customers`, customer);
+    return response.data;
+  } catch (error) {
+    console.error("Error creating customer:", error.response?.data || error);
+    throw error;
+  }
+};
 
 // Fetch all customers
 export const fetchCustomers = async () => {
@@ -12,7 +22,7 @@ export const fetchCustomers = async () => {
 // Upload customers via Excel
 export const uploadCustomers = async (formData) => {
   const response = await axios.post(
-    `${API_BASE_URL}/customers/upload`,
+    `${API_BASE_URL}/customers/bulk-upload`,
     formData,
     {
       headers: { "Content-Type": "multipart/form-data" },

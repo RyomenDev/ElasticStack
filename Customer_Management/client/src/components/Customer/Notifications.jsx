@@ -5,7 +5,7 @@ const Notifications = () => {
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
-    loadNotifications();
+    // loadNotifications();
   }, []);
 
   const loadNotifications = async () => {
